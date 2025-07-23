@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { LoginDto, RegisterDto } from './dto/auth.dto';
+import { LoginDto, RegisterDto, UserResponseDto, LoginResponseDto } from './dto/auth.dto';
 import { User } from '@prisma/client';
 import { hash, compare } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
@@ -12,7 +12,16 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  register = async (userData: RegisterDto): Promise<User> => {
+  private toUserResponse(user: User): UserResponseDto {
+    const { password, ...rest } = user;
+    return {
+      ...rest,
+      bio: rest.bio ?? undefined,
+      image: rest.image ?? undefined,
+    };
+  }
+
+  register = async (userData: RegisterDto): Promise<UserResponseDto> => {
     const user = await this.prismaService.user.findUnique({
       where: {
         email: userData.email,
@@ -31,10 +40,10 @@ export class AuthService {
       data: { ...userData, password: hashedPassword },
     });
 
-    return res;
+    return this.toUserResponse(res);
   };
 
-  login = async (userData: LoginDto): Promise<any> => {
+  login = async (userData: LoginDto): Promise<LoginResponseDto> => {
     const user = await this.prismaService.user.findUnique({
       where: {
         email: userData.email,
@@ -75,6 +84,11 @@ export class AuthService {
     return {
       accessToken,
       refreshToken,
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+      },
     };
   };
 }

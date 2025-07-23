@@ -1,6 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { User } from '@prisma/client';
-import { LoginDto, RegisterDto } from './dto/auth.dto';
+import { LoginDto, RegisterDto, UserResponseDto, LoginResponseDto } from './dto/auth.dto';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
@@ -8,12 +7,12 @@ export class AuthController {
   constructor(private readonly  authService: AuthService) {}
 
   @Post('register')
-  register(@Body() body: RegisterDto): Promise<User> {
+  register(@Body() body: RegisterDto): Promise<UserResponseDto> {
     return this.authService.register(body);
   }
 
   @Post('login')
-  login(@Body() body: LoginDto): Promise<User> {
+  login(@Body() body: LoginDto): Promise<LoginResponseDto> {
     return this.authService.login(body);
   }
 }

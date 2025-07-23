@@ -23,3 +23,23 @@ export class LoginDto {
   @IsNotEmpty()
   password: string;
 }
+
+export class UserResponseDto {
+  id: number;
+  username: string;
+  email: string;
+  bio?: string;
+  image?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export class LoginResponseDto {
+  accessToken: string;
+  refreshToken: string;
+  user: {
+    id: number;
+    username: string;
+    email: string;
+  };
+}
