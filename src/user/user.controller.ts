@@ -7,25 +7,24 @@ import { JwtAuthGuard } from 'src/auth/jwt.guard';
 
 @Controller('users')
 export class UserController {
-    constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) {}
 
-    @Post()
-    create(@Body() body: CreateUserDto): Promise<UserResponseDto> {
-        console.log("create user =>", body);
-        return this.userService.createUser(body);
-    }
+  @Post()
+  create(@Body() body: CreateUserDto): Promise<UserResponseDto> {
+    return this.userService.createUser(body);
+  }
 
-    @Get('me')
-    @UseGuards(JwtAuthGuard)
-    getCurrentUser(@Request() req): Promise<UserResponseDto> {
-        const userId = req.user.id;
-        return this.userService.getUserById(userId);
-    }
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  getCurrentUser(@Request() req): Promise<UserResponseDto> {
+    const userId = req.user.id;
+    return this.userService.getUserById(userId);
+  }
 
-    @Put('me')
-    @UseGuards(JwtAuthGuard)
-    updateCurrentUser(@Request() req, @Body() updateUserDto: UpdateUserDto): Promise<UserResponseDto> {
-        const userId = req.user.id;
-        return this.userService.updateUser(userId, updateUserDto);
-    }
+  @Put('me')
+  @UseGuards(JwtAuthGuard)
+  updateCurrentUser(@Request() req, @Body() updateUserDto: UpdateUserDto): Promise<UserResponseDto> {
+    const userId = req.user.id;
+    return this.userService.updateUser(userId, updateUserDto);
+  }
 }
