@@ -10,15 +10,6 @@ import { hash } from 'bcrypt';
 export class UserService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  private toUserResponse(user: User): UserResponseDto {
-    const { password, ...rest } = user;
-    return {
-      ...rest,
-      bio: rest.bio ?? undefined,
-      image: rest.image ?? undefined,
-    };
-  }
-
   async createUser(body: CreateUserDto): Promise<UserResponseDto> {
     const existingUser = await this.prismaService.user.findFirst({
       where: {
@@ -103,5 +94,14 @@ export class UserService {
     });
 
     return this.toUserResponse(updatedUser);
+  }
+  
+  private toUserResponse(user: User): UserResponseDto {
+    const { password, ...rest } = user;
+    return {
+      ...rest,
+      bio: rest.bio ?? undefined,
+      image: rest.image ?? undefined,
+    };
   }
 }
